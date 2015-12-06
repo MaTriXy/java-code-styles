@@ -1,16 +1,27 @@
 #!/bin/bash
 # Installs Square's IntelliJ configs into your user configs.
 
-echo "Installing Square code style configs..."
+echo "Installing Square IntelliJ configs..."
 
-for i in $HOME/Library/Preferences/IntelliJIdea*/codestyles \
-         $HOME/Library/Preferences/IdeaIC*/codestyles \
-         $HOME/Library/Preferences/AndroidStudio*/codestyles \
-         $HOME/.IntelliJIdea*/config/codestyles \
-         $HOME/.IdeaIC*/config/codestyles \
-         $HOME/.AndroidStudio*/config/codestyles
+CONFIGS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/configs"
+
+for i in $HOME/Library/Preferences/IntelliJIdea*  \
+         $HOME/Library/Preferences/IdeaIC*        \
+         $HOME/Library/Preferences/AndroidStudio* \
+         $HOME/.IntelliJIdea*/config              \
+         $HOME/.IdeaIC*/config                    \
+         $HOME/.AndroidStudio*/config
 do
-  cp -frv $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/configs/* $i 2> /dev/null
+  if [ -d $i ]; then
+
+    # Install codestyles
+    mkdir -p $i/codestyles
+    cp -frv "$CONFIGS/codestyles"/* $i/codestyles
+
+    # Install inspections
+    mkdir -p $i/inspection
+    cp -frv "$CONFIGS/inspection"/* $i/inspection
+  fi
 done
 
 echo "Done."
